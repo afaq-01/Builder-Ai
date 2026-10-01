@@ -1,27 +1,20 @@
 import { useState } from "react";
 import LoginLeft from "../components/LoginLeft";
-
+import { Link } from "react-router-dom";
+import { EyeOffIcon, EyeIcon, Loader2Icon } from "lucide-react";
+import Loading from "../components/Loading";
 const AuthPage = ({ mode }) => {
     const isLogin = mode === "login";
 
     const [error, setError] = useState("");
-    const [form, setForm] = useState({ name: "", email: "", password: "" });
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showpassword, setShowPassword] = useState("");
+    const [Loading, setLoading] = useState(false);
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setError("");
 
-        if (!form.email || !form.password || (!isLogin && !form.name)) {
-            setError("Please fill in all fields.");
-            return;
-        }
-
-        // TODO: call your login / register API here
-    };
 
     return (
         <div className="min-h-screen bg-white flex text-zinc-900 font-sans">
@@ -48,40 +41,89 @@ const AuthPage = ({ mode }) => {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        {!isLogin && (
-                            <input
-                                type="text"
-                                name="name"
-                                value={form.name}
-                                onChange={handleChange}
-                                placeholder="Full name"
-                                className="w-full px-3 py-2.5 text-sm border border-zinc-200 rounded-md focus:outline-none focus:border-zinc-900"
-                            />
-                        )}
-                        <input
-                            type="email"
-                            name="email"
-                            value={form.email}
-                            onChange={handleChange}
-                            placeholder="Email"
-                            className="w-full px-3 py-2.5 text-sm border border-zinc-200 rounded-md focus:outline-none focus:border-zinc-900"
-                        />
-                        <input
-                            type="password"
-                            name="password"
-                            value={form.password}
-                            onChange={handleChange}
-                            placeholder="Password"
-                            className="w-full px-3 py-2.5 text-sm border border-zinc-200 rounded-md focus:outline-none focus:border-zinc-900"
-                        />
+                    <form className="space-y-6">
+                        {
+                            !isLogin && (
+                                <div>
+                                    <label className="bold text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+                                        Full Name
+                                    </label>
+                                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full pl-2 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors" placeholder="Jhon Doe" />
+
+                                </div>
+                            )}
+
+                        <div>
+                            <label className="bold text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">
+                                Email Address
+                            </label>
+                            <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full pl-2 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors" placeholder="you@example.com" />
+
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="password"
+                                className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-2"
+                            >
+                                Password
+                            </label>
+
+                            <div className="relative">
+                                <input
+                                    id="password"
+                                    type={showpassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    placeholder="********"
+                                    className="w-full pl-2 pr-8 py-2 border-b border-zinc-200 focus:outline-none focus:border-zinc-950 text-sm text-zinc-900 bg-transparent placeholder-zinc-300 transition-colors"
+                                />
+
+                                <button
+                                    type="button"
+                                    aria-label={showpassword ? "Hide password" : "Show password"}
+                                    onClick={() => setShowPassword(!showpassword)}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-600 flex items-center justify-center cursor-pointer transition-colors"
+                                >
+                                    {showpassword ? <EyeOffIcon size={14} /> : <EyeIcon size={14} />}
+                                </button>
+                            </div>
+                        </div>
+
                         <button
                             type="submit"
-                            className="w-full py-2.5 text-sm font-medium text-white bg-zinc-900 rounded-md hover:bg-zinc-800 transition-colors"
+                            disabled={Loading}
+                            className="w-full py-2.5 mt-2 rounded-lg bg-linear-to-br from-red-600 to-amber-600 text-white font-semibold flex items-center justify-center cursor-pointer transition hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
                         >
-                            {isLogin ? "Sign in" : "Create account"}
+                            {Loading && <Loader2Icon className="animate-spin h-3.5 w-3.5 mr-2" />}
+                            {isLogin ? "Sign in" : "Sign up"}
                         </button>
+
+
                     </form>
+
+                    <p>
+                        {
+                            isLogin ? (
+                                <>
+                                    New to Builder-Ai { }
+                                    <Link to="/register" className="text-zinc-900 font-medium hover:underline">
+                                        Create an Account
+                                    </Link>
+                                </>
+                            )
+                                : (
+                                    <>
+                                        Already Have an Account{ }
+                                        <Link to="/Login" className="text-zinc-900 font-medium hover:underline">
+                                            Sign in here
+                                        </Link>
+
+                                    </>
+                                )
+                        }
+                    </p>
                 </div>
             </div>
         </div>

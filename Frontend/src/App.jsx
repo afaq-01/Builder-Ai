@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import {  AuthLayout, GuestLayout } from "./pages/Layout"
+import {AuthLayout, GuestLayout} from "./pages/Layout"
 import Home from "./pages/HomePage"
 import AuthPage from "./pages/AuthPage"
 import Builder_Page from "./pages/builderPage"
@@ -22,12 +22,9 @@ const App = () => {
             <Route path="/" element={<Home/>}/>
             <Route path="/builder/:id" element={<Builder_Page/>}/>
             <Route path="/preview/:id" element={<Preview_Page/>}/>
-
-
           </Route>
         </Routes>
       </BrowserRouter>
-
 
     </>
   )
