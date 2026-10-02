@@ -1,10 +1,13 @@
 import { useState } from "react";
 import LoginLeft from "../components/LoginLeft";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { EyeOffIcon, EyeIcon, Loader2Icon } from "lucide-react";
 import Loading from "../components/Loading";
+import { useAppContext } from "../context/AppContext";
 const AuthPage = ({ mode }) => {
     const isLogin = mode === "login";
+
+    const { login, register } = useAppContext();
 
     const [error, setError] = useState("");
     const [name, setName] = useState("");
@@ -12,6 +15,31 @@ const AuthPage = ({ mode }) => {
     const [password, setPassword] = useState("");
     const [showpassword, setShowPassword] = useState("");
     const [Loading, setLoading] = useState(false);
+    const Navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError('')
+        setLoading(true)
+
+        try {
+            if (mode === "Login") {
+                await login(email, password)
+            }
+            else {
+                await register(name, email.password)
+
+            }
+            Naviagte('/')
+        } catch (err) {
+            setError(err.message || (mode === "login" ? "Invalid email or password" : "Registration Failed"))
+
+        }
+        finally{
+            setLoading(false)
+        }
+
+    }
 
 
 
@@ -41,7 +69,7 @@ const AuthPage = ({ mode }) => {
                         </div>
                     )}
 
-                    <form className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
                         {
                             !isLogin && (
                                 <div>
@@ -103,7 +131,7 @@ const AuthPage = ({ mode }) => {
 
                     </form>
 
-                    <p>
+                    <p className="text-sm text-zinc-400 mt-4 pt-6 border-t border-zinc-100 font-sans">
                         {
                             isLogin ? (
                                 <>
