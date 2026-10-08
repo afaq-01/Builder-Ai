@@ -15,6 +15,7 @@ const App = () => {
           <Route element={<GuestLayout/>}>
             <Route path="/login" element={<AuthPage mode="login"/>}/>
             <Route path="/register" element={<AuthPage mode="register"/>}/>
+            <Route path="/home" element={<Home/>}/>
           </Route>
 
           {/*Protected Routes */}

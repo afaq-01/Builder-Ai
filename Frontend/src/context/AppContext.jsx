@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast'
-import { Navigate, useNavigate } from "react-router-dom";
 
 
 const AppContext = createContext(undefined);
@@ -9,14 +8,14 @@ export function AppContextProvider({ children }) {
 
     const [user, setUser] = useState(null)
     const [loadingUser, setLoadingUser] = useState(false)
-    const Navigate = useNavigate()
+
 
     // Auth Action
 
     const checkSession = async () => {
         try {
             const { data } = await api.get("/api/auth/me");
-            // setUser(data.user);
+             setUser(data.user);
 
         } catch (error) {
 
