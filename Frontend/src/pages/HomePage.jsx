@@ -34,8 +34,11 @@ const Home = () => {
                         <h1 className="text-center text-4xl md:text-6xl font-medium mt-4 max-w-2xl text-white">Let's build app together</h1>
                         <p className="text-center text-sm md:text-base max-w-xl mt-4 text-white/65 leading-relaxed">
                             Describe your idea and Ai design, structure and lunch website instantly. No coding required
-
                         </p>
+                        {/*Prompt input with glassmorphic variant */}
+                        <div className="w-full mt-6">
+
+                        </div>
                     </div>
 
                 </div>
