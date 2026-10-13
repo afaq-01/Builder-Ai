@@ -1,3 +1,4 @@
+import PromptInput from "../components/promptinput";
 
 const Home = () => {
 
@@ -36,7 +37,13 @@ const Home = () => {
                             Describe your idea and Ai design, structure and lunch website instantly. No coding required
                         </p>
                         {/*Prompt input with glassmorphic variant */}
-                        <div className="w-full mt-6">
+                        <div className="w-full  mt-6">
+                            <PromptInput
+                            onSubmit={()=>{}}
+                            loading={false}
+                            placeholder="Create a portfolio website..."
+                            variant="glass"
+                            autoFocus/>
 
                         </div>
                     </div>

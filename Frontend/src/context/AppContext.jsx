@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { toast } from 'react-hot-toast'
+import { toast } from 'react-hot-toast',
+import { useNavigate } from "react-router-dom"
 
 
 const AppContext = createContext(undefined);
@@ -9,13 +10,32 @@ export function AppContextProvider({ children }) {
     const [user, setUser] = useState(null)
     const [loadingUser, setLoadingUser] = useState(false)
 
+    const Navigate = useNavigate();
+
+    //States
+    const [project, setProject] = useState([])
+    const [loadingProject, setLoadingProject] = useState(true)
+    const [activeProject, setActiveProject] = useState(null)
+    const [loadingActiveProject, setloadingActiveProject] = useState(true)
+    const [chatLoading, setchatLoading] = useState(false)
+    const [generatingProject, setGeneratingProject] = useState(false)
+    const [activeFile, setAtiveFile] = useState("App.js");
+    const [showCode, setShowCode] = useState(false)
+
+
+
+
+
+
+
+
 
     // Auth Action
 
     const checkSession = async () => {
         try {
             const { data } = await api.get("/api/auth/me");
-             setUser(data.user);
+            setUser(data.user);
 
         } catch (error) {
 
@@ -55,6 +75,25 @@ export function AppContextProvider({ children }) {
             throw new Error(errMsg);
         }
     };
+
+    const logout = async () => {
+
+        try {
+            await api.post("/api/auth/logout")
+            setUser(null)
+            setProject([])
+            setActiveProject(null)
+            toast.success("logged out successfully")
+            Navigate("/login")
+
+
+        } catch (error) {
+            console.error("Logout failed", error);
+            toast.error("Logout failed");
+
+
+        }
+    }
 
 
 
