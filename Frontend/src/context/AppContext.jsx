@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 
@@ -22,16 +22,7 @@ export function AppContextProvider({ children }) {
     const [activeFile, setAtiveFile] = useState("App.js");
     const [showCode, setShowCode] = useState(false)
 
-
-
-
-
-
-
-
-
     // Auth Action
-
     const checkSession = async () => {
         try {
             const { data } = await api.get("/api/auth/me");
@@ -151,20 +142,60 @@ export function AppContextProvider({ children }) {
         if (isOngoing) {
             setchatLoading(true);
             const interval = setInterval(() => {
-               LoadProjects(activeProject?._id,true)
+                LoadProjects(activeProject?._id, true)
 
-            }, 2000);
+            }, 2000)
 
+            return () => clearInterval(interval)
+        } else {
+            setchatLoading(false)
         }
 
 
-    }, [])
+    }, [activeProject?._id, activeProject?.status, LoadProjects, user])
+
+    const handleGenerate = useCallback(
+        async (prompt) => {
+            if (!user) return;
+            setGeneratingProject(true);
+            try {
+                const { data } = await api.post("/api/projects", { prompt })
+                toast.success("Ai Agent is planning structure...")
+                Navigate(`/builder/${data._id}`)
+            } catch (error) {
+                console.error("Failed to generate project", error)
+                toast.error("error?.response?.data?.error" || "Failed to generate project")
+
+            } finally {
+                setGeneratingProject(false)
+            }
+        }
+        , [Navigate, user])
+
+    const handleDelete = useCallback(
+        async (id) => {
+            if (!user) return;
+            setGeneratingProject(true);
+            try {
+                await api.delete(`/api/projects/${id}`)
+                setProject((prev) => prev.filter((p) => p._id !== id))
+                toast.success("Project deleted successfully")
+                Navigate(`/builder/${data._id}`)
+            } catch (error) {
+                console.error("Failed to delete project", error)
+                toast.error("Failed to generate project")
+
+            } finally {
+                setGeneratingProject(false)
+            }
+        }
+        , [user])
 
 
 
     return (
 
-        <AppContext.Provider value={{ user, loadingUser, login, register }}>
+        <AppContext.Provider value={{ user, loadingUser, login, register, project, loadingProject, activeProject, loadingActiveProject, chatLoading, generatingProject, activeFile, showCode, setAtiveFile, setShowCode, loadingProject, handleGenerate,handleDelete }}>
             {children}
         </AppContext.Provider>
     )
