@@ -195,7 +195,7 @@ export function AppContextProvider({ children }) {
 
     return (
 
-        <AppContext.Provider value={{ user, loadingUser, login, register, project, loadingProject, activeProject, loadingActiveProject, chatLoading, generatingProject, activeFile, showCode, setAtiveFile, setShowCode, loadingProject, handleGenerate,handleDelete }}>
+        <AppContext.Provider value={{ user, loadingUser, login, register, project, LoadProjects, activeProject, loadingActiveProject, chatLoading, generatingProject, activeFile, showCode, setAtiveFile, setShowCode, loadingProject, handleGenerate,handleDelete }}>
             {children}
         </AppContext.Provider>
     )
