@@ -1,7 +1,15 @@
-import { homeTags } from "../assets/assets";
-import PromptInput from "../components/promptinput";
-import { useAppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { ClockIcon, Trash2Icon } from "lucide-react";
+import { homeTags } from "../assets/assets";
+import PromptInput from "../components/promptinput"; // check the exact filename casing (e.g. PromptInput.jsx)
+import { useAppContext } from "../context/AppContext";
+
+const formatDate = (value) => {
+    if (!value) return "";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleDateString();
+};
 
 const Home = () => {
     const {
@@ -9,16 +17,22 @@ const Home = () => {
         projects,
         loadingProjects,
         generatingProject,
-        loadProject,
         handleGenerate,
         handleDelete,
         logout,
-        LoadProjects
+        LoadProjects,
     } = useAppContext();
 
+    const navigate = useNavigate();
+
+    // Load projects once on mount. Using [] avoids an infinite re-fetch loop
+    // if LoadProjects isn't memoised with useCallback in AppContext.
     useEffect(() => {
         LoadProjects();
-    }, [LoadProjects]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const openProject = (id) => navigate(`/builder/${id}`);
 
     return (
         <div className="h-screen overflow-y-scroll text-white font-sans bg-[url('/bg-img.png')] bg-cover bg-center bg-no-repeat">
@@ -29,7 +43,7 @@ const Home = () => {
                     <span>BuildAI</span>
                 </div>
                 <div className="flex items-center gap-4 text-sm font-medium text-zinc-300">
-                    <span>User</span>
+                    <span>{user?.name || "User"}</span>
                     <button
                         onClick={logout}
                         className="py-1.5 px-3 border border-white/20 text-white hover:bg-white/10 text-xs rounded-md cursor-pointer bg-transparent"
@@ -40,7 +54,7 @@ const Home = () => {
             </nav>
 
             {/* Hero */}
-            <div className="flex-1 flex flex-col items-center justify-center px-6 pb-20 mt-8 xl:mt-28">
+            <div className="flex flex-col items-center justify-center px-6 pb-20 mt-8 xl:mt-28">
                 <div className="w-full max-w-2xl flex flex-col items-center">
                     {/* Promo Badge */}
                     <div className="flex items-center gap-2 p-1.5 pr-3 bg-white/10 backdrop-blur-md rounded-full border border-white/20 text-[13px] text-white/90">
@@ -77,7 +91,7 @@ const Home = () => {
                                     key={i}
                                     onClick={() => handleGenerate(tag)}
                                     disabled={generatingProject}
-                                    className="px-4 py-1.5 border rounded-full text-sm text-white bg-white/10 border-white/25 hover:bg-white/20 transition cursor-pointer shrink-0 font-medium"
+                                    className="px-4 py-1.5 border rounded-full text-sm text-white bg-white/10 border-white/25 hover:bg-white/20 transition cursor-pointer shrink-0 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {tag}
                                 </button>
@@ -96,6 +110,54 @@ const Home = () => {
                                     {projects.length}{" "}
                                     {projects.length === 1 ? "project" : "projects"}
                                 </span>
+                            </div>
+
+                            <div className="space-y-2 max-h-[80vh] overflow-y-auto pr-1">
+                                {projects.map((p) => (
+                                    <div
+                                        key={p._id}
+                                        role="button"
+                                        tabIndex={0}
+                                        onClick={() => openProject(p._id)}
+                                        onKeyDown={(e) => {
+                                            if (e.target !== e.currentTarget) return;
+                                            if (e.key === "Enter" || e.key === " ") {
+                                                e.preventDefault();
+                                                openProject(p._id);
+                                            }
+                                        }}
+                                        className="bg-white/5 border border-white/10 rounded-lg px-4 py-3 flex items-center justify-between group hover:border-white/20 hover:bg-white/10 focus:outline-none focus-visible:border-white/40 cursor-pointer backdrop-blur-md transition-all"
+                                    >
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-white truncate">
+                                                {p.name}
+                                            </p>
+                                            <div className="flex items-center gap-3 mt-0.5">
+                                                <span className="text-xs text-zinc-300 flex items-center gap-1">
+                                                    <ClockIcon size={10} />
+                                                    {formatDate(p.updatedAt || p.createdAt)}
+                                                </span>
+                                                <span className="text-xs text-white/60 font-medium">
+                                                    v{p.version}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                type="button"
+                                                aria-label={`Delete ${p.name}`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(p._id);
+                                                }}
+                                                className="p-1.5 rounded-md text-zinc-200 hover:text-red-400 hover:bg-white/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer"
+                                            >
+                                                <Trash2Icon size={14} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     )}
