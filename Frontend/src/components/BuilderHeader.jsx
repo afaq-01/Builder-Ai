@@ -1,6 +1,6 @@
-import { ArrowLeftIcon, Code2Icon, EyeIcon } from "lucide-react";
+import { ArrowLeftIcon, Code2Icon, Download, DownloadIcon, ExternalLink, ExternalLinkIcon, EyeIcon, GlobeIcon, Loader2Icon } from "lucide-react";
 
-const BuilderHeader = ({ ProjectName, version, ShowCode, publishing, onToggleShowCode, onOpenPreview, onPublish, onDownload, onBack, onDownload, onLogout }) => {
+const BuilderHeader = ({ ProjectName, version, ShowCode, publishing, onToggleShowCode, onOpenPreview, onPublish,  onBack, onDownload, onLogout }) => {
 
     return (
         <>
@@ -16,7 +16,7 @@ const BuilderHeader = ({ ProjectName, version, ShowCode, publishing, onToggleSho
 
                 <div className="flex items-center gap-1.5">
                     <button onClick={onToggleShowCode}
-                        className={`inline-flex items-center justify-center gap-1.5 py-1.5 px-3 border  border-zinc-200 text-zinc-600 hover:bg-zinc-900 text-xs font-medium rounded-lg cursor-pointer bg-white ${ShowCode ? "bg-zinc-100":"text-zinc-900"}`}
+                        className={`inline-flex items-center justify-center gap-1.5 py-1.5 px-3 border  border-zinc-200 text-zinc-600 hover:bg-zinc-900 text-xs font-medium rounded-lg cursor-pointer bg-white ${ShowCode ? "bg-zinc-100" : "text-zinc-900"}`}
                     >
                         {
                             ShowCode ? (
@@ -31,7 +31,21 @@ const BuilderHeader = ({ ProjectName, version, ShowCode, publishing, onToggleSho
                                 )
                         }
                     </button>
+                    <button onClick={onOpenPreview} className="inline-flex items-center justify-center gap-1.5 py1.5 px-3 border border-zinc-200 text-200 text-zinc-600 hover:bg-zinc-100 hover:zinc-900 text-xs font-meduim rounded-lg cursor-pointer bg-white ">
+                        <ExternalLinkIcon size={13} /> Open Preview
 
+                    </button>
+                    <button onClick={onPublish} disabled={publishing} className="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 border border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 text-xs font-medium rounded-lg cursor-pointer bg-white">
+                        {publishing ? <Loader2Icon size={13} className="animate-spin" /> : <GlobeIcon size={13} />} Publish
+                    </button>
+
+                    <button onClick={onDownload} className="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 border border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 text-xs font-medium rounded-lg cursor-pointer bg-white">
+                        <DownloadIcon size={13} /> Export
+                    </button>
+
+                     <button onClick={onLogout} className="inline-flex items-center justify-center gap-1.5 py-1.5 px-3 border border-zinc-200 text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 text-xs font-medium rounded-lg cursor-pointer bg-white">
+                        Sign out
+                    </button>
                 </div>
             </Header>
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import BuilderHeader from "../components/BuilderHeader";
 
 const Builder_Page = () => {
     const { id } = useParams();
@@ -10,10 +11,24 @@ const Builder_Page = () => {
 
     const { activeProject, loadingActiveProject, activeFile, showCode, setActiveFile, setShowCode, loadProject, logout } = useAppContext();
 
+    const handleOpenPreview = () => {
+        if (!id) return;
+        window.open(`/preview/${id}`, '_blank')
+
+    }
+
+    const handlePublish = () => {
+
+    }
+
+     const handleDownload = () => {
+
+    }
+
     useEffect(() => {
         if (!id) return;
         loadProject(id)
-    }, [id, loadProject])
+    }, [id])
 
     useEffect(() => {
         if (!id || !activeProject) return;
@@ -33,6 +48,18 @@ const Builder_Page = () => {
         <>
             <div className="h-screen flex flex-col bg-white overflow-hidden text-zinc-900 relative">
                 {/*Top bar header */}
+                <BuilderHeader
+                    ProjectName={activeProject.name}
+                    version={activeProject.version}
+                    ShowCode={showCode}
+                    publishing={publishing}
+                    onToggleShowCode={() => setShowCode(!showCode)}
+                    onOpenPreview={handleOpenPreview}
+                    onPublish={handlePublish}
+                    onDownload={handleDownload}
+                    onBack={Navigate("/")}
+                    onLogout={logout}
+                />
 
 
 
