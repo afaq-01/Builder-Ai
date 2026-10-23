@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BuilderHeader from "../components/BuilderHeader";
+import { MessageSquareIcon } from "lucide-react";
 
 const Builder_Page = () => {
     const { id } = useParams();
@@ -21,7 +22,7 @@ const Builder_Page = () => {
 
     }
 
-     const handleDownload = () => {
+    const handleDownload = () => {
 
     }
 
@@ -61,9 +62,23 @@ const Builder_Page = () => {
                     onLogout={logout}
                 />
 
-
-
                 {/*Main Layout */}
+                <div className="flex-1 flex overflow-hidden">
+                    {/*Left sidebar */}
+                    <div className="w-[320px] shrink-0 flex flex-col border-r border-zinc-200 bg-white">
+                        {/*SideBar Tabs */}
+                        <div className="flex border-b border-zinc-100">
+                            <button onClick={()=>setLeftTab("chat")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-meduim cursor-pointer ${leftTab === "chat" ? "text-zinc-900 border-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
+                                <MessageSquareIcon size={13}/> chat
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    {/*Preview / code area */}
+
+                </div>
 
             </div>
         </>
