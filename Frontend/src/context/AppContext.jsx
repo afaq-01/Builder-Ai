@@ -22,6 +22,7 @@ export function AppContextProvider({ children }) {
     const [activeFile, setAtiveFile] = useState("App.js");
     const [showCode, setShowCode] = useState(false)
 
+
     // Auth Action
     const checkSession = async () => {
         try {
@@ -32,7 +33,7 @@ export function AppContextProvider({ children }) {
 
         } finally {
             setLoadingUser(false)
-        }
+        } [activeProject, user]
     }
 
     useEffect(() => {
@@ -191,11 +192,34 @@ export function AppContextProvider({ children }) {
         }
         , [user])
 
+    const handleChat = useCallback(
+        async (prompt) => {
+            if (!activeProject || !user) return;
+            setchatLoading(true)
+            try {
+                const { data } = await api.post(`/api/projects/${activeProject._id}/chat`, { prompt });
+                setActiveProject(data);
+                if (data.errors && data.errors.lenght > 0) {
+                    toast.error(`${data.errors.lenght} version patch(es) failed`);
+                } else {
+                    toast.success(`Updated to version ${data.version}`)
+                }
+            } catch (err) {
+                console.error("Revision request failed:", err)
+                toast.error(err?.response?.data?.error || "Revision request failed")
+            } finally {
+                setchatLoading(false)
+            }
+
+
+        },[activeProject,user]
+    )
+
 
 
     return (
 
-        <AppContext.Provider value={{ user, loadingUser, login, register, project, LoadProjects, activeProject, loadingActiveProject, chatLoading, generatingProject, activeFile, showCode, setAtiveFile, setShowCode, loadingProject, handleGenerate,handleDelete }}>
+        <AppContext.Provider value={{ user, loadingUser, login, register, project, LoadProjects, activeProject, loadingActiveProject, chatLoading, generatingProject, activeFile, showCode, setAtiveFile, setShowCode, loadingProject, handleGenerate, handleDelete }}>
             {children}
         </AppContext.Provider>
     )

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BuilderHeader from "../components/BuilderHeader";
-import { MessageSquareIcon } from "lucide-react";
+import { FolderTreeIcon, MessageSquareIcon } from "lucide-react";
 
 const Builder_Page = () => {
     const { id } = useParams();
@@ -10,7 +10,9 @@ const Builder_Page = () => {
     const [publishUrl, setPublishUrl] = useState(false)
     const [publishing, setPublishing] = useState(false)
 
-    const { activeProject, loadingActiveProject, activeFile, showCode, setActiveFile, setShowCode, loadProject, logout } = useAppContext();
+
+
+    const { activeProject, loadingActiveProject, activeFile, showCode, setActiveFile, setShowCode, loadProject, logout,chatLoading } = useAppContext();
 
     const handleOpenPreview = () => {
         if (!id) return;
@@ -25,6 +27,8 @@ const Builder_Page = () => {
     const handleDownload = () => {
 
     }
+
+   
 
     useEffect(() => {
         if (!id) return;
@@ -68,10 +72,23 @@ const Builder_Page = () => {
                     <div className="w-[320px] shrink-0 flex flex-col border-r border-zinc-200 bg-white">
                         {/*SideBar Tabs */}
                         <div className="flex border-b border-zinc-100">
-                            <button onClick={()=>setLeftTab("chat")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-meduim cursor-pointer ${leftTab === "chat" ? "text-zinc-900 border-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
-                                <MessageSquareIcon size={13}/> chat
+                            <button onClick={() => setLeftTab("chat")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-meduim cursor-pointer ${leftTab === "chat" ? "text-zinc-900 border-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
+                                <MessageSquareIcon size={13} /> chat
                             </button>
 
+                            <button onClick={() => setLeftTab("files")} className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-meduim cursor-pointer ${leftTab === "files" ? "text-zinc-900 border-b-2 border-zinc-900" : "text-zinc-400 hover:text-zinc-700"}`}>
+                                <FolderTreeIcon size={13} /> chat
+                            </button>
+                        </div>
+                        {/*Sidebar Contect */}
+                        <div className="flex overflow-hidden">
+                            {
+                                leftTab === 'chat' ? (
+                                    <ChatPanel message={activeProject.message} onSend={handleChat} loading={chatLoading}/>
+                                ) : (
+                                    <div>File explorer</div>
+                                )
+                            }
                         </div>
 
                     </div>
