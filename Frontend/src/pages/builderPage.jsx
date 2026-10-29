@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BuilderHeader from "../components/BuilderHeader";
 import { FolderTreeIcon, MessageSquareIcon } from "lucide-react";
+import FileExplorer from "../components/FileExplorer";
 
 const Builder_Page = () => {
     const { id } = useParams();
@@ -86,7 +87,7 @@ const Builder_Page = () => {
                                 leftTab === 'chat' ? (
                                     <ChatPanel message={activeProject.message} onSend={handleChat} loading={chatLoading}/>
                                 ) : (
-                                    <div>File explorer</div>
+                                  <FileExplorer files={activeProject.files} activeFile={activeFile} onFileSelect={(path)=>{setActiveFile(path)}}/>
                                 )
                             }
                         </div>
@@ -94,6 +95,7 @@ const Builder_Page = () => {
                     </div>
 
                     {/*Preview / code area */}
+                    <div className="flex-1 overflow-hidden"></div>
 
                 </div>
 
